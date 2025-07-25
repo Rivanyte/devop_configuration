@@ -1,0 +1,28 @@
+* you can use dhcp or static if you want to.
+
+enable
+conf t
+int g 1
+ip addr dhcp
+no shut
+
+* Enabling logging to elastic
+* The logging host is the IP address of the Linux
+
+conf t
+logging on 
+logging host 208.8.8.133 transport udp port 9001
+logging trap informational
+
+
+* Enable filebeat service(lagay sa linux kung nasaan yung elastic)
+systemctl enable --now filebeat.service
+
+
+* Add these udp ports to firewall, by adding this ports the cisco device will be able to reach the filebeat module cisco
+sudo firewall-cmd --add-port=9001/udp --permanent
+sudo firewall-cmd --add-port=9002/udp --permanent
+sudo firewall-cmd --reload
+sudo systemctl restart filebeat
+
+* NOW CHECK THE ELASTIC
